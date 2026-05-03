@@ -1,13 +1,21 @@
 import json
+import os
 
 def cek_instagram():
     print("🔍 Memulai Pengecekan Data Instagram...\n")
+
+    # Ini adalah kunci rahasianya: Mendeteksi lokasi folder secara otomatis
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    
+    file_following = os.path.join(base_dir, 'following.json')
+    file_followers = os.path.join(base_dir, 'followers_1.json')
+    file_pending = os.path.join(base_dir, 'pending_follow_requests.json')
 
     # ==========================================
     # 1. CEK AKUN YANG TIDAK FOLLBACK
     # ==========================================
     try:
-        with open('following.json', 'r') as f:
+        with open(file_following, 'r', encoding='utf-8') as f:
             following_data = json.load(f)
         
         following = set()
@@ -18,7 +26,7 @@ def cek_instagram():
             except Exception:
                 continue
 
-        with open('followers_1.json', 'r') as f:
+        with open(file_followers, 'r', encoding='utf-8') as f:
             followers_data = json.load(f)
             
         followers = set()
@@ -37,13 +45,13 @@ def cek_instagram():
         print("-" * 40 + "\n")
 
     except FileNotFoundError:
-        print("⚠️ Gagal mengecek follback: File 'following.json' atau 'followers_1.json' tidak ditemukan.\n")
+        print(f"⚠️ Gagal mengecek follback: File 'following.json' atau 'followers_1.json' tidak ditemukan di folder:\n{base_dir}\n")
 
     # ==========================================
     # 2. CEK PERMINTAAN FOLLOW YANG PENDING
     # ==========================================
     try:
-        with open('pending_follow_requests.json', 'r') as f:
+        with open(file_pending, 'r', encoding='utf-8') as f:
             pending_data = json.load(f)
             
         pending_requests = []
@@ -61,7 +69,7 @@ def cek_instagram():
         print("-" * 40 + "\n")
 
     except FileNotFoundError:
-        print("⚠️ Gagal mengecek pending request: File 'pending_follow_requests.json' tidak ditemukan.\n")
+        print(f"⚠️ Gagal mengecek pending request: File 'pending_follow_requests.json' tidak ditemukan di folder:\n{base_dir}\n")
     except KeyError:
         print("✔️ Tidak ada permintaan follow yang pending saat ini.\n")
 
